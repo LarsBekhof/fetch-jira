@@ -12,7 +12,7 @@
 6. Fill out `~/.config/fetch-jira/config.json` with the following details
 ```json
 {
-	"username": "<your-jira-email>",
+	"username": "<jira-email>",
 	"apiToken": "<jira-api-token>",
 	"host": "<jira-host>"
 }
@@ -28,7 +28,7 @@ Alternatively you can run this command and then follow steps 5 and 6 `git clone 
 6. Fill out `~/Library/Application Support/fetch-jira/config.json` with the following details
 ```json
 {
-	"username": "<your-jira-email>",
+	"username": "<jira-email>",
 	"apiToken": "<jira-api-token>",
 	"host": "<jira-host>"
 }
