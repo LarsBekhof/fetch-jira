@@ -18,7 +18,6 @@
 ```
 Alternatively you can run this command and then follow steps 4 and 5 `git clone git@github.com:LarsBekhof/fetch-jira.git && cd fetch-jira && cp fetch-jira /usr/local/bin && mkdir ~/.config/fetch-jira && touch ~/.config/fetch-jira/config.json && rm -rf fetch-jira`
 
-
 ## macOS
 1. Place `fetch-jira` somewhere on your PATH, you could do this by running `cp fetch-jira /usr/local/bin`
 2. Run `mkdir ~/Library/Application Support/fetch-jira`.
