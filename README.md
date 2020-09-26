@@ -17,7 +17,7 @@
 }
 ```
 
-## macOs
+## macOS
 1. Place `fetch-jira` somewhere on your PATH, your could do this by running `cp fetch-jira /usr/local/bin`
 2. Run `mkdir ~/Library/Application Support/fetch-jira`.
 3. Run `touch ~/Library/Application Support/fetch-jira/config.json`.
@@ -32,6 +32,6 @@
 ```
 
 # Usage
-Run `fetch-jira` this will give you an output similar to this ![Output example](https://imgur.com/a/FGRrG2N)
+Run `fetch-jira` this will give you an output similar to this ![Output example](https://i.imgur.com/qsW6V4j.png)
 
-If the output is to wide for your screen you can always pipe the output to VIM like this `fetch-jira | vim`.
+If the output is too wide for your screen you can always pipe the output to VIM like this `fetch-jira | vim`.
