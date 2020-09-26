@@ -1,0 +1,78 @@
+#!/usr/bin/env node
+
+const https = require('https');
+const fs = require('fs');
+const cp = require('child_process');
+const os = require('os');
+
+const applicationConfig = 'fetch-jira/config.json';
+
+const home = cp.execSync('printf $HOME');
+
+let configLocation;
+
+switch (os.platform()) {
+	case 'linux':
+		configLocation = `${home}/.config/${applicationConfig}`;
+		break;
+	case 'darwin':
+		configLocation = `${home}/Library/Application Support/${applicationConfig}`;
+		break;
+	default:
+		throw 'OS not supported';
+}
+
+const {
+	username,
+	apiToken,
+	host,
+} = JSON.parse(fs.readFileSync(configLocation));
+
+const jiraRequest = (method, path, jql) => {
+	return new Promise((resolve, reject) => {
+		https[method]({
+			host,
+			path: encodeURI(`/rest/api/3${path}${jql ? `?jql=${jql}` : ''}`),
+			method,
+			auth: `${username}:${apiToken}`,
+		}, (response) => {
+			let data = '';
+
+			response.on('data', (chunk) => data += chunk);
+
+			response.on('end', () => {
+				data ? resolve(JSON.parse(data)) : resolve();
+			});
+		}).on('error', reject);
+	});
+}
+
+jiraRequest('get', '/search', 'project=TEST AND issueType=Story').then((data) => {
+	const table = [];
+
+	for (const issue of data.issues) {
+		table.push({
+			ID: issue.key,
+			Type: issue.fields.issuetype.name,
+			Title: issue.fields.summary,
+			Status: issue.fields.status.name,
+			Assignee: issue.fields.assignee ? issue.fields.assignee.displayName : 'Unassigned',
+			'Sub-Tasks': issue.fields.subtasks.map(st => st.key).join(', ') || 'No sub-tasks',
+			URL: `https://${host}/browse/${issue.key}`,
+		});
+
+		for (const subTask of issue.fields.subtasks) {
+			table.push({
+				ID: subTask.key,
+				Type: subTask.fields.issuetype.name,
+				Title: subTask.fields.summary,
+				Status: issue.fields.status.name,
+				Assignee: subTask.fields.assignee ? subTask.fields.assignee.displayName : 'Unassigned',
+				'Sub-Tasks': 'No sub-tasks',
+				URL: `https://${host}/browse/${subTask.key}`,
+			});
+		}
+	}
+
+	console.table(table);
+});
