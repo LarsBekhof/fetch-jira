@@ -26,6 +26,7 @@ const {
 	username,
 	apiToken,
 	host,
+	project,
 } = JSON.parse(fs.readFileSync(configLocation));
 
 const jiraRequest = (method, path, jql) => {
@@ -47,7 +48,7 @@ const jiraRequest = (method, path, jql) => {
 	});
 }
 
-jiraRequest('get', '/search', 'project=TEST AND issueType=Story').then((data) => {
+jiraRequest('get', '/search', `project=${project} AND issueType=Story`).then((data) => {
 	const table = [];
 
 	for (const issue of data.issues) {
