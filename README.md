@@ -38,4 +38,4 @@ Alternatively you can run this command and then follow steps 5 and 6 `git clone 
 # Usage
 Run `fetch-jira` this will give you an output similar to this ![Output example](https://i.imgur.com/qsW6V4j.png)
 
-If the output is too wide for your screen you can always pipe the output to VIM like this `fetch-jira | vim`. If wrapping is not enabled in VIM run this command `:set wrap!`.
+If the output is too wide for your screen you can always pipe the output to VIM like this `fetch-jira | vim`. If wrapping is enabled in VIM run this command `:set wrap!`.
