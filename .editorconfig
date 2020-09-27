@@ -1,0 +1,4 @@
+root = true
+
+[.{ts,json}]
+indent_style = tab

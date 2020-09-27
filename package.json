@@ -1,0 +1,31 @@
+{
+  "name": "fetch-jira",
+  "version": "1.0.0",
+  "description": "A simple terminal client for jira",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/init.js",
+    "dev": "npm run build && npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LarsBekhof/fetch-jira.git"
+  },
+  "author": "Lars Bekhof",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LarsBekhof/fetch-jira/issues"
+  },
+  "homepage": "https://github.com/LarsBekhof/fetch-jira#readme",
+  "devDependencies": {
+    "@tsconfig/node10": "^1.0.7",
+    "@types/node": "^14.11.2",
+    "@types/node-fetch": "^2.5.7",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "printf": "^0.6.0"
+  }
+}
