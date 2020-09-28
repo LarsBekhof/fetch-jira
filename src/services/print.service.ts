@@ -56,6 +56,23 @@ export class PrintService {
 	}
 
 	printIssue(issue: any) {
+		const { jiraHost } = this.getConfig();
+		const columnPaddings = [20, 0];
+		const columnColors = [termColors.fgBlue, null];
+		const format = this.getFormat(columnPaddings, columnColors);
+		let body = '';
+
+		body += printf(format, 'Key', issue.key);
+		body += printf(format, 'Type', issue.fields.issuetype.name);
+		body += printf(format, 'Title', issue.fields.summary);
+		body += printf(format, 'Status', issue.fields.status.name);
+		body += printf(format, 'Assignee', issue.fields.assignee ? issue.fields.assignee.displayName : 'Unassigned');
+		body += printf(format, 'Creator', issue.fields.creator ? issue.fields.creator.displayName : 'Unassigned');
+		body += printf(format, 'Labels', issue.fields.labels.join(', ') || 'No labels');
+		body += printf(format, 'Description', this.formatDescription(issue.fields.description));
+		body += printf(format, 'URL', `https://${jiraHost}/browse/${issue.key}`);
+		
+		console.log(body);
 	}
 
 	private getConfig(): Config
@@ -84,5 +101,18 @@ export class PrintService {
 
 	private formatString(input: string, maxLength: number): string {
 		return input.length > maxLength ? input.slice(0, maxLength - 3) + '...' : input;
+	}
+
+	private formatDescription(input: any): string {
+		let description = '';
+
+		for (const paragrpah of input.content) {
+			for (const content of paragrpah.content) {
+				description += content.text;
+			}
+			description += '\n';
+		}
+
+		return description.slice(0, description.length - 1);
 	}
 }

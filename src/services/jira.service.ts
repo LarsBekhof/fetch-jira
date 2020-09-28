@@ -26,7 +26,7 @@ export class JiraService {
 	}
 
 	public async getIssue(key: string): Promise<any> {
-		const fields = this.getFields(['description']);
+		const fields = this.getFields(['summary', 'assignee', 'creator', 'issuetype', 'labels', 'status', 'description']);
 		const { url, options } = this.getOptions(
 			`issue/${key}?${fields}`,
 			'GET',
