@@ -58,19 +58,26 @@ export class PrintService {
 	printIssue(issue: any) {
 		const { jiraHost } = this.getConfig();
 		const columnPaddings = [20, 0];
-		const columnColors = [termColors.fgBlue, null];
-		const format = this.getFormat(columnPaddings, columnColors);
+		const defaultFormat = this.getFormat(columnPaddings, [termColors.fgBlue, null]);
 		let body = '';
 
-		body += printf(format, 'Key', issue.key);
-		body += printf(format, 'Type', issue.fields.issuetype.name);
-		body += printf(format, 'Title', issue.fields.summary);
-		body += printf(format, 'Status', issue.fields.status.name);
-		body += printf(format, 'Assignee', issue.fields.assignee ? issue.fields.assignee.displayName : 'Unassigned');
-		body += printf(format, 'Creator', issue.fields.creator ? issue.fields.creator.displayName : 'Unassigned');
-		body += printf(format, 'Labels', issue.fields.labels.join(', ') || 'No labels');
-		body += printf(format, 'Description', this.formatDescription(issue.fields.description));
-		body += printf(format, 'URL', `https://${jiraHost}/browse/${issue.key}`);
+		body += printf(defaultFormat, 'Key', issue.key);
+		body += printf(defaultFormat, 'Type', issue.fields.issuetype.name);
+		body += printf(defaultFormat, 'Title', issue.fields.summary);
+		body += printf(defaultFormat, 'Status', issue.fields.status.name);
+		body += printf(
+			this.getFormat(columnPaddings, [termColors.fgBlue, issue.fields.assignee ? termColors.fgGreen : termColors.fgRed]),
+			'Assignee',
+			issue.fields.assignee ? issue.fields.assignee.displayName : 'Unassigned'
+		);
+		body += printf(defaultFormat, 'Creator', issue.fields.creator.displayName);
+		body += printf(
+			this.getFormat(columnPaddings, [termColors.fgBlue, issue.fields.labels.length ? termColors.fgGreen : termColors.fgRed]),
+			'Labels',
+			issue.fields.labels.join(', ') || 'No labels'
+		);
+		body += printf(defaultFormat, 'Description', this.formatDescription(issue.fields.description, columnPaddings));
+		body += printf(defaultFormat, 'URL', `https://${jiraHost}/browse/${issue.key}`);
 		
 		console.log(body);
 	}
@@ -103,16 +110,23 @@ export class PrintService {
 		return input.length > maxLength ? input.slice(0, maxLength - 3) + '...' : input;
 	}
 
-	private formatDescription(input: any): string {
-		let description = '';
+	private formatDescription(input: any, paddings: number[]): string {
+		const lines = [];
 
 		for (const paragrpah of input.content) {
+			let line = '';
 			for (const content of paragrpah.content) {
-				description += content.text;
+				line += content.text;
 			}
-			description += '\n';
+
+			// Skip the first line as it's already formatted
+			const formattedLine: string = lines.length === 0
+				? `${line}\n`
+				: printf(this.getFormat(paddings, [null, null]), '', line);
+			lines.push(formattedLine);
 		}
 
+		const description = lines.join('');
 		return description.slice(0, description.length - 1);
 	}
 }
